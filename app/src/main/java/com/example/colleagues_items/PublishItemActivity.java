@@ -1,6 +1,7 @@
 package com.example.colleagues_items;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -94,6 +95,15 @@ public class PublishItemActivity extends AppCompatActivity {
         itemDAO = new ItemDAO(this);
         userPrefs = new UserPrefs(this);
 
+        // 检查用户是否已登录
+        if (!userPrefs.getRememberUser()) {
+            // 用户未登录，跳转到登录页面
+            Intent intent = new Intent(PublishItemActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         // 初始化Spinner数据源
         initSpinners();
 
@@ -137,11 +147,20 @@ public class PublishItemActivity extends AppCompatActivity {
         Toast.makeText(this, "已选择日期: " + selectedDate, Toast.LENGTH_SHORT).show();
     }
 
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
+    
     // 调用相机拍照
     private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        // 检查相机权限
+        if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            // 已有权限，直接调用相机
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            // 请求相机权限
+            requestPermissions(new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
         }
     }
 
@@ -295,6 +314,21 @@ public class PublishItemActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    // 处理权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 用户授予了相机权限，再次调用拍照方法
+                dispatchTakePictureIntent();
+            } else {
+                // 用户拒绝了相机权限，显示提示
+                Toast.makeText(this, "需要相机权限才能拍照", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

@@ -93,36 +93,7 @@
                     android:tint="@color/school_green_dark" />
             </LinearLayout>
 
-            <!-- 已点赞的商品 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:onClick="onLikedItemsClick">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_edit"
-                    android:layout_marginRight="16dp"
-                    android:tint="@color/school_green_dark" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="已点赞的商品"
-                    android:textSize="16sp"
-                    android:textColor="@color/school_green_dark" />
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_media_next"
-                    android:tint="@color/school_green_dark" />
-            </LinearLayout>
 
             <!-- 联系方式 -->
             <LinearLayout

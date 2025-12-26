@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.colleagues_items">
 
-    <!-- 添加必要的权限 -->
+    <!-- 拍照/存储权限（解决拍照功能失效） -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" /> <!-- 适配Android 10+存储权限 -->
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Colleagues_items"
-        android:requestLegacyExternalStorage="true"
-        tools:targetApi="31">
+        android:theme="@style/Theme.Colleagues_items">
+
+        <!-- 登录Activity -->
         <activity
-            android:name=".MainActivity" />
-        <activity android:name=".ItemsListActivity" />
-        <activity android:name=".PublishItemActivity" />
-        <activity android:name=".ItemDetailActivity" />
-        <activity android:name=".LoginActivity" android:exported="true">
+            android:name=".LoginActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <!-- 主Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <!-- 注册ProfileActivity（解决跳转崩溃） -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+
+        <!-- 注册其他必要Activity（示例） -->
+        <activity android:name=".ItemsListActivity" android:exported="false" />
+        <activity android:name=".PublishItemActivity" android:exported="false" />
+        <!-- 注册ItemDetailActivity -->
+        <activity android:name=".ItemDetailActivity" android:exported="false" />
+
+    </application>
 </manifest>

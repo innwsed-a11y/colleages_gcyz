@@ -31,10 +31,24 @@ public class MainActivity extends AppCompatActivity {
     // 底部导航栏按钮
     private Button btnNavHome, btnNavItems, btnNavPublish, btnNavProfile;
 
+    private UserPrefs userPrefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 初始化用户偏好设置
+        userPrefs = new UserPrefs(this);
+        
+        // 检查用户是否已登录
+        if (!userPrefs.getRememberUser()) {
+            // 用户未登录，跳转到登录页面
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // 初始化组件
         etSearch = findViewById(R.id.et_search);

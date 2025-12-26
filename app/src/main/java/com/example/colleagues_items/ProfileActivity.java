@@ -97,18 +97,9 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // 已点赞的商品点击事件
-    public void onLikedItemsClick(View view) {
-        // 跳转到已点赞商品列表页面
-        Intent intent = new Intent(ProfileActivity.this, ItemsListActivity.class);
-        intent.putExtra("show_type", "liked");
-        startActivity(intent);
-        Toast.makeText(this, "已点赞商品功能开发中", Toast.LENGTH_SHORT).show();
-    }
-
     // 联系方式点击事件
     public void onContactClick(View view) {
-        // 跳转到联系方式编辑页面
-        Toast.makeText(this, "联系方式功能开发中", Toast.LENGTH_SHORT).show();
+        // 显示联系方式
+        Toast.makeText(this, "联系方式：13800138000", Toast.LENGTH_SHORT).show();
     }
 }
