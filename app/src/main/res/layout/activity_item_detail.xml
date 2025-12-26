@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 根布局改为 ScrollView，支持垂直滚动 -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="16dp">
+
+    <!-- 原来的 LinearLayout 作为 ScrollView 的子布局 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 物品图片 -->
+        <ImageView
+            android:id="@+id/iv_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background" />
+
+        <!-- 物品名称 -->
+        <TextView
+            android:id="@+id/tv_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/school_green_dark" />
+
+        <!-- 物品价格 -->
+        <TextView
+            android:id="@+id/tv_item_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/school_red"
+            android:layout_marginTop="8dp" />
+
+        <!-- 物品描述 -->
+        <TextView
+            android:id="@+id/tv_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+
+        <!-- 发布日期 -->
+        <TextView
+            android:id="@+id/tv_item_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="16dp" />
+
+        <!-- 卖家信息 -->
+        <TextView
+            android:id="@+id/tv_seller_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp" />
+
+        <!-- 联系方式 -->
+        <TextView
+            android:id="@+id/tv_contact_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- 联系卖家按钮 -->
+        <Button
+            android:id="@+id/btn_contact_seller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="联系卖家"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/school_green_dark"
+            android:textColor="@color/school_white"
+            android:textSize="18sp" />
+
+        <!-- 点赞按钮 -->
+        <Button
+            android:id="@+id/btn_like"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="点赞"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/school_green_light"
+            android:textColor="@color/school_white"
+            android:textSize="18sp" />
+
+        <!-- 点赞数量 -->
+        <TextView
+            android:id="@+id/tv_likes_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!-- 评论区域 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp">
+
+            <!-- 评论标题 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="评论"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/school_green_dark" />
+
+            <!-- 评论输入框 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <EditText
+                    android:id="@+id/et_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="输入评论..."
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:background="@drawable/rounded_edittext" />
+
+                <Button
+                    android:id="@+id/btn_submit_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="发送"
+                    android:layout_marginLeft="8dp"
+                    android:backgroundTint="@color/school_green_dark"
+                    android:textColor="@color/school_white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 评论列表 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_comments"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

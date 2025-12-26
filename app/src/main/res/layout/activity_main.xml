@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FFF8"
+    tools:context=".MainActivity">
+    <!-- 浅绿色背景 -->
+
+    <!-- 内容区域 -->
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_nav"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="广财易栈"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"
+            android:textColor="@color/school_green_dark" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="广财易栈，闲物速转"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/school_green_dark" />
+
+        <!-- 搜索栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="30dp">
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:hint="搜索商品..."
+                android:paddingHorizontal="15dp"
+                android:background="#FFFFFF"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:drawablePadding="8dp"
+                android:textColor="@color/school_green_dark"
+                android:textColorHint="#88006633" />
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:text="搜索"
+                android:textSize="16sp"
+                android:background="@color/school_green_dark"
+                android:textColor="@color/school_white"
+                android:layout_marginLeft="10dp"
+                android:paddingHorizontal="20dp" />
+        </LinearLayout>
+
+        <!-- 高赞物品列表 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="高赞物品"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/school_green_dark" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_popular_items"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/school_white" />
+
+    </LinearLayout>
+
+    <!-- 底部导航栏 -->
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@color/school_green_dark"
+        android:divider="@android:drawable/divider_horizontal_bright"
+        android:showDividers="middle">
+
+        <Button
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="首页"
+            android:background="@null"
+            android:textColor="@color/school_white"
+            android:drawableTop="@android:drawable/ic_dialog_email" />
+
+        <Button
+            android:id="@+id/nav_items"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="物品"
+            android:background="@null"
+            android:textColor="@color/school_white"
+            android:drawableTop="@android:drawable/ic_menu_view" />
+
+        <Button
+            android:id="@+id/nav_publish"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="发布"
+            android:background="@null"
+            android:textColor="@color/school_white"
+            android:drawableTop="@android:drawable/ic_menu_add" />
+
+        <Button
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="我的"
+            android:background="@null"
+            android:textColor="@color/school_white"
+            android:drawableTop="@android:drawable/ic_menu_myplaces" />
+    </LinearLayout>
+</RelativeLayout>

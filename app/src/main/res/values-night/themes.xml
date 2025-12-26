@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme for night mode. -->
+    <style name="Theme.Colleagues_items" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <!-- Primary brand color - 使用校徽深绿色 -->
+        <item name="colorPrimary">@color/school_green_dark</item>
+        <item name="colorPrimaryVariant">@color/school_green_light</item>
+        <item name="colorOnPrimary">@color/school_white</item>
+        <!-- Secondary brand color - 使用校徽浅绿色 -->
+        <item name="colorSecondary">@color/school_green_light</item>
+        <item name="colorSecondaryVariant">@color/school_green_dark</item>
+        <item name="colorOnSecondary">@color/school_white</item>
+        <!-- Status bar color - 使用校徽深绿色 -->
+        <item name="android:statusBarColor">@color/school_green_dark</item>
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
