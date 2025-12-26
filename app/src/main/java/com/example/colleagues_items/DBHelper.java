@@ -8,7 +8,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // 数据库名称
     private static final String DATABASE_NAME = "campus_items.db";
     // 数据库版本
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // 物品表
     public static final String TABLE_ITEMS = "items";

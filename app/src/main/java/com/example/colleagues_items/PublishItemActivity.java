@@ -1,11 +1,6 @@
 package com.example.colleagues_items;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,19 +8,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PublishItemActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -111,44 +106,19 @@ public class PublishItemActivity extends AppCompatActivity {
         tvSelectedDate.setText(selectedDate);
 
         // 日期选择按钮点击事件
-        btnSelectDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
+        btnSelectDate.setOnClickListener(v -> showDatePicker());
 
         // 拍照按钮点击事件
-        btnTakePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
-            }
-        });
+        btnTakePhoto.setOnClickListener(v -> dispatchTakePictureIntent());
 
         // 从相册选择按钮点击事件
-        btnChoosePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dispatchPickPictureIntent();
-            }
-        });
+        btnChoosePhoto.setOnClickListener(v -> dispatchPickPictureIntent());
 
         // 取消按钮点击事件
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnCancel.setOnClickListener(v -> finish());
 
         // 发布按钮点击事件
-        btnPublish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                publishItem();
-            }
-        });
+        btnPublish.setOnClickListener(v -> publishItem());
     }
 
     // 显示日期选择器
@@ -158,17 +128,12 @@ public class PublishItemActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // 创建日期选择对话框
         DatePicker datePicker = new DatePicker(this);
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth);
-                tvSelectedDate.setText(selectedDate);
-            }
+        datePicker.init(year, month, day, (view, year1, monthOfYear, dayOfMonth) -> {
+            selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d",
+                    year1, monthOfYear + 1, dayOfMonth);
+            tvSelectedDate.setText(selectedDate);
         });
-
-        // 这里简化处理，直接使用Toast提示选择的日期
         Toast.makeText(this, "已选择日期: " + selectedDate, Toast.LENGTH_SHORT).show();
     }
 
@@ -193,18 +158,14 @@ public class PublishItemActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
-                // 处理相机拍照返回的结果
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 ivItemImage.setImageBitmap(imageBitmap);
-                // 保存图片到文件
-                saveImage(imageBitmap);
+                saveImage(imageBitmap); // 保存图片到文件
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null) {
-                // 处理相册选择返回的结果
                 Uri selectedImage = data.getData();
                 ivItemImage.setImageURI(selectedImage);
-                // 保存图片路径
-                imagePath = selectedImage.toString();
+                imagePath = selectedImage.toString(); // 保存图片路径
             }
         }
     }
@@ -213,21 +174,21 @@ public class PublishItemActivity extends AppCompatActivity {
     private void initSpinners() {
         // 商品分类
         String[] categories = {"数码产品", "图书教材", "生活用品", "体育器材", "服饰箱包", "文具用品"};
-        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, 
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCategory.setAdapter(categoryAdapter);
 
         // 新旧程度
         String[] conditions = {"全新", "九成新", "八成新", "七成及以下"};
-        ArrayAdapter<String> conditionAdapter = new ArrayAdapter<>(this, 
+        ArrayAdapter<String> conditionAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, conditions);
         conditionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCondition.setAdapter(conditionAdapter);
 
         // 所在校区
         String[] campuses = {"广州校区", "三水校区"};
-        ArrayAdapter<String> campusAdapter = new ArrayAdapter<>(this, 
+        ArrayAdapter<String> campusAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, campuses);
         campusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCampus.setAdapter(campusAdapter);
@@ -235,7 +196,6 @@ public class PublishItemActivity extends AppCompatActivity {
 
     // 保存图片到文件
     private void saveImage(Bitmap bitmap) {
-        // 创建保存图片的目录
         File directory = getExternalFilesDir(null);
         File imageFile = new File(directory, "item_image_" + System.currentTimeMillis() + ".jpg");
 
@@ -261,15 +221,13 @@ public class PublishItemActivity extends AppCompatActivity {
         if (!username.isEmpty()) {
             etSellerName.setText(username);
         }
-
         if (!contact.isEmpty()) {
             etContactInfo.setText(contact);
         }
-
         cbRememberUser.setChecked(remember);
     }
 
-    // 发布物品
+    // 发布物品（完整实现）
     private void publishItem() {
         // 获取输入的物品信息
         final String name = etItemName.getText().toString().trim();
@@ -281,75 +239,69 @@ public class PublishItemActivity extends AppCompatActivity {
         final String category = spCategory.getSelectedItem().toString();
         final String condition = spCondition.getSelectedItem().toString();
         final String campus = spCampus.getSelectedItem().toString();
-        
+
         // 收集选中的标签
         StringBuilder tagsBuilder = new StringBuilder();
-        if (cbFreeShipping.isChecked()) {
-            tagsBuilder.append("包邮 ");
-        }
-        if (cbNegotiable.isChecked()) {
-            tagsBuilder.append("可议价 ");
-        }
-        if (cbUrgent.isChecked()) {
-            tagsBuilder.append("急售 ");
-        }
-        if (cbSelfPickup.isChecked()) {
-            tagsBuilder.append("仅自提 ");
-        }
-        final String tags = tagsBuilder.toString().trim();
+        if (cbFreeShipping.isChecked()) tagsBuilder.append("免运费,");
+        if (cbNegotiable.isChecked()) tagsBuilder.append("可议价,");
+        if (cbUrgent.isChecked()) tagsBuilder.append("急出,");
+        if (cbSelfPickup.isChecked()) tagsBuilder.append("自提,");
+        String tags = tagsBuilder.length() > 0 ? tagsBuilder.substring(0, tagsBuilder.length() - 1) : "";
 
-        // 验证输入
-        if (name.isEmpty() || priceStr.isEmpty() || seller.isEmpty() || contact.isEmpty()) {
-            Toast.makeText(this, "请填写完整的物品信息", Toast.LENGTH_SHORT).show();
+        // 数据校验
+        if (name.isEmpty() || priceStr.isEmpty() || description.isEmpty() || seller.isEmpty() || contact.isEmpty()) {
+            Toast.makeText(this, "请填写完整信息", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (imagePath == null || imagePath.isEmpty()) {
+            Toast.makeText(this, "请选择商品图片", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // 保存用户信息（如果选择记住用户）
+        // 保存用户信息（如果勾选）
         if (rememberUser) {
             userPrefs.saveUserInfo(seller, contact, true);
-        } else {
-            // 如果不记住用户，清除之前保存的信息
-            userPrefs.clearUserInfo();
         }
 
+        // 构建Item对象
+        final Item item = new Item();
+        item.setName(name);
         try {
-            final double price = Double.parseDouble(priceStr);
-
-            // 在后台线程中执行数据库操作
-            executorService.execute(() -> {
-                // 创建Item对象
-                Item item = new Item();
-                item.setName(name);
-                item.setDescription(description);
-                item.setPrice(price);
-                item.setImagePath(imagePath);
-                item.setPublishDate(selectedDate);
-                item.setSeller(seller);
-                item.setContact(contact);
-                item.setCategory(category);
-                item.setTags(tags);
-                item.setCondition(condition);
-                item.setLikes(0); // 初始点赞数为0
-                item.setCampus(campus);
-
-                // 保存到数据库
-                long newRowId = itemDAO.addItem(item);
-
-                // 在主线程中更新UI
-                handler.post(() -> {
-                    if (newRowId != -1) {
-                        Toast.makeText(this, "物品发布成功", Toast.LENGTH_SHORT).show();
-                        // 返回物品列表页面
-                        Intent intent = new Intent(PublishItemActivity.this, ItemsListActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(this, "物品发布失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            });
+            item.setPrice(Double.parseDouble(priceStr));
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "价格格式不正确", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "价格格式错误", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        item.setDescription(description);
+        item.setSeller(seller);
+        item.setContact(contact);
+        item.setCategory(category);
+        item.setCondition(condition);
+        item.setCampus(campus);
+        item.setTags(tags);
+        item.setPublishDate(selectedDate);
+        item.setImagePath(imagePath);
+        item.setLikes(0); // 初始点赞数为0
+
+        // 保存到数据库
+        executorService.execute(() -> {
+            long result = itemDAO.insertItem(item);
+            handler.post(() -> {
+                if (result != -1) {
+                    Toast.makeText(PublishItemActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                    finish(); // 发布后返回上一页
+                } else {
+                    Toast.makeText(PublishItemActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
         }
     }
 }
