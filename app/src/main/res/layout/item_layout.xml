@@ -74,4 +74,16 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- 删除按钮 -->
+    <ImageButton
+        android:id="@+id/btn_delete_item"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/ic_menu_delete"
+        android:background="#ff4444"
+        android:tint="#ffffff"
+        android:padding="8dp"
+        android:layout_marginLeft="8dp"
+        android:contentDescription="删除物品" />
+
 </LinearLayout>

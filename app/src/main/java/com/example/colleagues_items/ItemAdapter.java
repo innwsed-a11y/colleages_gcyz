@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -97,6 +98,32 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                         }
                     });
                 }
+
+                // 设置删除按钮权限控制和点击事件
+                if (holder.btnDeleteItem != null) {
+                    // 获取当前登录的用户名
+                    UserPrefs userPrefs = new UserPrefs(context);
+                    String currentUser = userPrefs.getUsername();
+                    
+                    // 检查物品的卖家是否与当前登录用户相同
+                    String itemSeller = item.getSeller();
+                    if (currentUser != null && !currentUser.isEmpty() 
+                            && itemSeller != null && itemSeller.equals(currentUser)) {
+                        // 是当前用户发布的物品，显示删除按钮
+                        holder.btnDeleteItem.setVisibility(View.VISIBLE);
+                        holder.btnDeleteItem.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (listener != null) {
+                                    listener.onDeleteClick(item);
+                                }
+                            }
+                        });
+                    } else {
+                        // 不是当前用户发布的物品，隐藏删除按钮
+                        holder.btnDeleteItem.setVisibility(View.GONE);
+                    }
+                }
             }
         } catch (Exception e) {
             // 捕获所有异常，避免崩溃
@@ -156,6 +183,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         TextView tvItemSeller;
         TextView tvItemDate;
         ImageView ivItemImage;
+        ImageButton btnDeleteItem;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -164,6 +192,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             tvItemSeller = itemView.findViewById(R.id.tv_item_seller);
             tvItemDate = itemView.findViewById(R.id.tv_item_date);
             ivItemImage = itemView.findViewById(R.id.iv_item_image);
+            btnDeleteItem = itemView.findViewById(R.id.btn_delete_item);
         }
     }
 }

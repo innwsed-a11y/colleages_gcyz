@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FFF8"
+    android:background="@drawable/bg"
     tools:context=".MainActivity">
-    <!-- 浅绿色背景 -->
+    <!-- 应用背景图 -->
 
     <!-- 内容区域 -->
     <LinearLayout
@@ -74,7 +74,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="高赞物品"
+            android:text="闲置焕新，省心交易"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="10dp"
