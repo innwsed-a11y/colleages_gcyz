@@ -37,10 +37,24 @@ public class ItemsListActivity extends AppCompatActivity {
     private String searchKeyword;
     private String showType;
 
+    private UserPrefs userPrefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items_list);
+
+        // 初始化用户偏好设置
+        userPrefs = new UserPrefs(this);
+        
+        // 检查用户是否已登录
+        if (!userPrefs.getRememberUser()) {
+            // 用户未登录，跳转到登录页面
+            Intent intent = new Intent(ItemsListActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // 初始化组件
         recyclerView = findViewById(R.id.recycler_view_items);

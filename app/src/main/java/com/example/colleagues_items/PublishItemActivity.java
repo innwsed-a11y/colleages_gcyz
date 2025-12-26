@@ -2,9 +2,12 @@ package com.example.colleagues_items;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -20,9 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -184,8 +190,40 @@ public class PublishItemActivity extends AppCompatActivity {
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null) {
                 Uri selectedImage = data.getData();
                 ivItemImage.setImageURI(selectedImage);
-                imagePath = selectedImage.toString(); // 保存图片路径
+                saveUriToFile(selectedImage); // 将Uri保存为文件并获取路径
             }
+        }
+    }
+
+    // 将Uri保存为文件并获取路径
+    private void saveUriToFile(Uri uri) {
+        try {
+            // 从Uri获取输入流
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                // 创建文件
+                File directory = getExternalFilesDir(null);
+                File imageFile = new File(directory, "item_image_" + System.currentTimeMillis() + ".jpg");
+                
+                // 将输入流内容写入文件
+                FileOutputStream outputStream = new FileOutputStream(imageFile);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                
+                // 关闭流
+                outputStream.close();
+                inputStream.close();
+                
+                // 保存图片路径
+                imagePath = imageFile.getAbsolutePath();
+                Toast.makeText(this, "图片保存成功", Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "图片保存失败", Toast.LENGTH_SHORT).show();
         }
     }
 

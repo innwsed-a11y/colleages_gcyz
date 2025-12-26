@@ -20,6 +20,15 @@ public class ProfileActivity extends AppCompatActivity {
 
         // 初始化用户偏好设置
         userPrefs = new UserPrefs(this);
+        
+        // 检查用户是否已登录
+        if (!userPrefs.getRememberUser()) {
+            // 用户未登录，跳转到登录页面
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // 初始化控件
         tvUsername = findViewById(R.id.tv_username);
