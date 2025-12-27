@@ -106,6 +106,15 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // 我点赞的商品点击事件
+    public void onLikedItemsClick(View view) {
+        // 跳转到我点赞的商品列表页面
+        Intent intent = new Intent(ProfileActivity.this, ItemsListActivity.class);
+        intent.putExtra("show_type", "liked");
+        intent.putExtra("username", tvUsername.getText().toString());
+        startActivity(intent);
+    }
+
     // 联系方式点击事件
     public void onContactClick(View view) {
         // 显示联系方式

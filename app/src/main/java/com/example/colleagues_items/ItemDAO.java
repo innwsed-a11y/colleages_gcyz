@@ -313,4 +313,157 @@ public class ItemDAO {
         db.close();
         return items;
     }
+
+    // 点赞物品
+    public boolean likeItem(String userId, int itemId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            // 开启事务
+            db.beginTransaction();
+            
+            // 1. 在点赞表中插入记录
+            ContentValues likeValues = new ContentValues();
+            likeValues.put(DBHelper.COLUMN_USER_ID, userId);
+            likeValues.put(DBHelper.COLUMN_LIKE_ITEM_ID, itemId);
+            long likeId = db.insert(DBHelper.TABLE_LIKES, null, likeValues);
+            
+            if (likeId != -1) {
+                // 2. 获取当前物品的点赞数
+                Cursor cursor = db.query(DBHelper.TABLE_ITEMS, new String[]{DBHelper.COLUMN_LIKES},
+                        DBHelper.COLUMN_ID + " = ?", new String[]{String.valueOf(itemId)}, null, null, null);
+                int currentLikes = 0;
+                if (cursor.moveToFirst()) {
+                    currentLikes = cursor.getInt(0);
+                }
+                cursor.close();
+                
+                // 3. 更新物品的点赞数
+                ContentValues itemValues = new ContentValues();
+                itemValues.put(DBHelper.COLUMN_LIKES, currentLikes + 1);
+                int rowsAffected = db.update(DBHelper.TABLE_ITEMS, itemValues, 
+                        DBHelper.COLUMN_ID + " = ?", 
+                        new String[]{String.valueOf(itemId)});
+                
+                if (rowsAffected > 0) {
+                    // 提交事务
+                    db.setTransactionSuccessful();
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 结束事务
+            db.endTransaction();
+            db.close();
+        }
+        return false;
+    }
+
+    // 取消点赞物品
+    public boolean unlikeItem(String userId, int itemId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            // 开启事务
+            db.beginTransaction();
+            
+            // 1. 从点赞表中删除记录
+            int likeRowsAffected = db.delete(DBHelper.TABLE_LIKES, 
+                    DBHelper.COLUMN_USER_ID + " = ? AND " + DBHelper.COLUMN_LIKE_ITEM_ID + " = ?", 
+                    new String[]{userId, String.valueOf(itemId)});
+            
+            if (likeRowsAffected > 0) {
+                // 2. 获取当前物品的点赞数
+                Cursor cursor = db.query(DBHelper.TABLE_ITEMS, new String[]{DBHelper.COLUMN_LIKES},
+                        DBHelper.COLUMN_ID + " = ?", new String[]{String.valueOf(itemId)}, null, null, null);
+                int currentLikes = 0;
+                if (cursor.moveToFirst()) {
+                    currentLikes = cursor.getInt(0);
+                }
+                cursor.close();
+                
+                // 3. 更新物品的点赞数（确保不小于0）
+                ContentValues itemValues = new ContentValues();
+                int newLikes = Math.max(0, currentLikes - 1);
+                itemValues.put(DBHelper.COLUMN_LIKES, newLikes);
+                int itemRowsAffected = db.update(DBHelper.TABLE_ITEMS, itemValues, 
+                        DBHelper.COLUMN_ID + " = ?", 
+                        new String[]{String.valueOf(itemId)});
+                
+                if (itemRowsAffected > 0) {
+                    // 提交事务
+                    db.setTransactionSuccessful();
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 结束事务
+            db.endTransaction();
+            db.close();
+        }
+        return false;
+    }
+
+    // 检查用户是否已点赞物品
+    public boolean isItemLiked(String userId, int itemId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(DBHelper.TABLE_LIKES, 
+                    null,
+                    DBHelper.COLUMN_USER_ID + " = ? AND " + DBHelper.COLUMN_LIKE_ITEM_ID + " = ?",
+                    new String[]{userId, String.valueOf(itemId)},
+                    null, null, null);
+            return cursor != null && cursor.getCount() > 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+    }
+    
+    // 从Cursor获取Item对象
+    private Item getItemFromCursor(Cursor cursor) {
+        Item item = new Item();
+        item.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_ID)));
+        item.setName(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_NAME)));
+        item.setPrice(cursor.getDouble(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_PRICE)));
+        item.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_DESCRIPTION)));
+        item.setImagePath(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_IMAGE_PATH)));
+        item.setPublishDate(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_PUBLISH_DATE)));
+        item.setSeller(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_SELLER)));
+        item.setContact(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_CONTACT)));
+        item.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_CATEGORY)));
+        item.setTags(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_TAGS)));
+        item.setCondition(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_CONDITION)));
+        item.setLikes(cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_LIKES)));
+        item.setCampus(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_CAMPUS)));
+        return item;
+    }
+
+    public List<Item> getLikedItems(String username) {
+        List<Item> likedItems = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        
+        // 联合查询点赞表和物品表，获取用户点赞的物品
+        String query = "SELECT i.* FROM " + DBHelper.TABLE_ITEMS + " i " +
+                      "INNER JOIN " + DBHelper.TABLE_LIKES + " l ON i." + DBHelper.COLUMN_ID + " = l." + DBHelper.COLUMN_LIKE_ITEM_ID + " " +
+                      "WHERE l." + DBHelper.COLUMN_USER_ID + " = ?";
+        
+        Cursor cursor = db.rawQuery(query, new String[]{username});
+        
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Item item = getItemFromCursor(cursor);
+                likedItems.add(item);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        
+        db.close();
+        return likedItems;
+    }
 }

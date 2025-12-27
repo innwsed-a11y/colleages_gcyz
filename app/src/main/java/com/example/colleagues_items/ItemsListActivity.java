@@ -125,9 +125,12 @@ public class ItemsListActivity extends AppCompatActivity {
                 loadSellerItems(seller);
             } else if ("liked".equals(showType)) {
                 // 加载用户点赞的物品
-                // 注意：这里需要实现用户点赞功能才能正常工作
-                Toast.makeText(this, "已点赞商品功能开发中...", Toast.LENGTH_SHORT).show();
-                loadAllItems();
+                String username = intent.getStringExtra("username");
+                if (username != null) {
+                    loadLikedItems(username);
+                } else {
+                    loadAllItems();
+                }
             } else {
                 // 加载所有物品
                 loadAllItems();
@@ -166,6 +169,16 @@ public class ItemsListActivity extends AppCompatActivity {
     private void loadSellerItems(String seller) {
         executorService.execute(() -> {
             List<Item> items = itemDAO.getItemsBySeller(seller);
+            handler.post(() -> {
+                updateItemsList(items);
+            });
+        });
+    }
+
+    // 加载用户点赞的物品
+    private void loadLikedItems(String username) {
+        executorService.execute(() -> {
+            List<Item> items = itemDAO.getLikedItems(username);
             handler.post(() -> {
                 updateItemsList(items);
             });
