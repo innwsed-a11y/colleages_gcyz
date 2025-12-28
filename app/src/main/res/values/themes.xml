@@ -11,6 +11,9 @@
         <item name="colorOnSecondary">@color/school_white</item>
         <!-- Status bar color - 使用校徽深绿色 -->
         <item name="android:statusBarColor">@color/school_green_dark</item>
+        <!-- 去除标题栏 -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

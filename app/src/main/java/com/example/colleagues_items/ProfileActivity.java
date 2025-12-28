@@ -117,7 +117,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     // 联系方式点击事件
     public void onContactClick(View view) {
-        // 显示联系方式
-        Toast.makeText(this, "联系方式：13800138000", Toast.LENGTH_SHORT).show();
+        // 显示用户实际填写的联系方式
+        String contact = userPrefs.getContact();
+        if (contact.isEmpty()) {
+            Toast.makeText(this, "未设置联系方式", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "联系方式：" + contact, Toast.LENGTH_SHORT).show();
+        }
     }
 }

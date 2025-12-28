@@ -65,6 +65,24 @@
             android:inputType="textPassword" />
     </LinearLayout>
 
+    <!-- 记住登录信息 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="30dp">
+        
+        <CheckBox
+            android:id="@+id/cb_remember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="记住登录信息"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:checked="true" />
+    </LinearLayout>
+    
     <!-- 登录按钮 -->
     <Button
         android:id="@+id/btn_login"

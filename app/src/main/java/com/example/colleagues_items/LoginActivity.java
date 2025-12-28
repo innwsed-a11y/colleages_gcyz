@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;
+    private CheckBox cbRemember;
     private UserPrefs userPrefs;
 
     @Override
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.et_username);
         etPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
+        cbRemember = findViewById(R.id.cb_remember);
 
         // 设置登录按钮点击事件
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -39,8 +42,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 // 简单的登录验证（实际项目中应该连接服务器验证）
                 if (validateLogin(username, password)) {
-                    // 保存用户信息
-                    userPrefs.saveUserInfo(username, "", true);
+                    // 保存用户信息，根据记住登录信息的选择决定是否记住
+                    boolean remember = cbRemember.isChecked();
+                    userPrefs.saveUserInfo(username, "", remember);
 
                     // 跳转到首页
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
